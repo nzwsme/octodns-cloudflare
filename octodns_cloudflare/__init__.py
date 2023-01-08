@@ -59,7 +59,8 @@ class CloudflareProvider(BaseProvider):
         )
     )
 
-    MIN_TTL = 120
+    # MIN_TTL = 120
+    MIN_TTL = 1
     TIMEOUT = 15
 
     def __init__(
@@ -170,7 +171,8 @@ class CloudflareProvider(BaseProvider):
         return self._zones
 
     def _ttl_data(self, ttl):
-        return 300 if ttl == 1 else ttl
+        # return 300 if ttl == 1 else ttl
+        return ttl
 
     def _data_for_cdn(self, name, _type, records):
         self.log.info('CDN rewrite for %s', records[0]['name'])
@@ -326,7 +328,7 @@ class CloudflareProvider(BaseProvider):
             )
         return {
             'type': _type,
-            'ttl': 300,  # ttl does not exist for this type, forcing a setting
+            'ttl': 1,  # ttl does not exist for this type, forcing a setting
             'values': values,
         }
 
@@ -418,7 +420,7 @@ class CloudflareProvider(BaseProvider):
                     _values = record['actions'][0]['value']
                     _values['path'] = path
                     # no ttl set by pagerule, creating one
-                    _values['ttl'] = 300
+                    _values['ttl'] = 1
                     values[name][_type].append(_values)
                 # the dns_records branch
                 # elif 'name' in record:
@@ -725,7 +727,7 @@ class CloudflareProvider(BaseProvider):
                 # assumption, actions will always contain 1 action
                 _values = record['actions'][0]['value']
                 _values['path'] = path
-                _values['ttl'] = 300
+                _values['ttl'] = 1
                 _values['type'] = 'URLFWD'
                 record.update(_values)
             else:
